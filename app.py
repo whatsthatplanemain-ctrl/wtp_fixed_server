@@ -37,6 +37,7 @@ labels = [
     "747",
     "757",
     "777",
+    "787",
     "a320",
     "a330",
     "a330-beluga",
@@ -48,6 +49,7 @@ labels = [
     "eurofighter_typhoon",
     "not_planes"
 ]
+
 
 @app.route("/", methods=["GET"])
 def index():
