@@ -37,6 +37,7 @@ labels = [
     "747",
     "757",
     "777",
+    "787",
     "a320",
     "a330",
     "a330-beluga",
@@ -48,6 +49,7 @@ labels = [
     "eurofighter_typhoon",
     "not_planes"
 ]
+
 
 @app.route("/", methods=["GET"])
 def index():
@@ -73,6 +75,13 @@ def predict():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+# ✅ New health check route (added only)
+@app.route("/health", methods=["GET"])
+def health():
+    return jsonify({"status": "OK"})
+
 
 if __name__ == "__main__":
     # Local run
