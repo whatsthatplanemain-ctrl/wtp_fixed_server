@@ -51,12 +51,10 @@ labels = [
     "not_planes"
 ]
 
-# Root route for Render health checks
 @app.route("/", methods=["GET"])
 def index():
     return jsonify({"message": "Aircraft recognition API is running."})
 
-# Prediction endpoint
 @app.route("/predict", methods=["POST"])
 def predict():
     if "file" not in request.files:
@@ -78,12 +76,7 @@ def predict():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# Health check route
-@app.route("/health", methods=["GET"])
-def health():
-    return jsonify({"status": "OK"})
 
-# Entry point
 if __name__ == "__main__":
-    # Use Render's PORT if available, otherwise default to 5000
+    # ✅ Use Render's PORT if available, otherwise default to 5000
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
