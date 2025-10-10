@@ -70,12 +70,11 @@ def predict():
             class_id = predicted.item()
             class_name = labels[class_id] if class_id < len(labels) else str(class_id)
 
-        return class_name
+        return jsonify({"class_id": class_id, "class_name": class_name})
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
 if __name__ == "__main__":
-    # ✅ Your original working run command
+    # Local run
     app.run(host="0.0.0.0", port=5000, debug=True)
