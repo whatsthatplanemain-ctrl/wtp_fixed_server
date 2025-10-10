@@ -70,7 +70,7 @@ def predict():
             class_id = predicted.item()
             class_name = labels[class_id] if class_id < len(labels) else str(class_id)
 
-        return jsonify({"class_id": class_id, "class_name": class_name})
+        return class_name
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
