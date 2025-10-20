@@ -7,7 +7,7 @@ import torchvision.transforms.functional as F
 app = Flask(__name__)
 
 # Path to your TorchScript model
-MODEL_PATH = "model_aircraft.pt"
+MODEL_PATH = "aircraft_model.pt"
 model = torch.jit.load(MODEL_PATH, map_location="cpu")
 model.eval()
 
@@ -23,7 +23,7 @@ def pad_to_square(img, fill=(0, 0, 0)):
 
 transform = transforms.Compose([
     transforms.Lambda(lambda img: pad_to_square(img)),  # pad to square
-    transforms.Resize((224, 224)),                      # downscale to 224x224
+    transforms.Resize((224, 224)),                      # resize to 224x224
     transforms.ToTensor(),
     transforms.Normalize(
         mean=[0.485, 0.456, 0.406],
@@ -31,13 +31,12 @@ transform = transforms.Compose([
     )
 ])
 
-# Your dataset classes
+# Your dataset classes in the exact training order
 labels = [
     "737",
     "747",
     "757",
-    "777",
-    "787",
+    "767",
     "a320",
     "a330",
     "a330-beluga",
@@ -45,7 +44,10 @@ labels = [
     "a350",
     "a380",
     "an_124",
+    "atlas_a400",
+    "atr_72",
     "cessna172",
+    "embraer_e190",
     "eurofighter_typhoon",
     "not_planes"
 ]
@@ -66,11 +68,16 @@ def predict():
 
         with torch.no_grad():
             outputs = model(input_tensor)
-            _, predicted = torch.max(outputs, 1)
-            class_id = predicted.item()
+            probabilities = torch.nn.functional.softmax(outputs, dim=1)[0]
+            class_id = torch.argmax(probabilities).item()
             class_name = labels[class_id] if class_id < len(labels) else str(class_id)
+            confidence = probabilities[class_id].item()
 
-        return jsonify({"class_id": class_id, "class_name": class_name})
+        return jsonify({
+            "class_id": class_id,
+            "class_name": class_name,
+            "confidence": f"{confidence:.2%}"
+        })
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
