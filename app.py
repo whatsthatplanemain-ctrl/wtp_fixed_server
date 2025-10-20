@@ -50,7 +50,6 @@ labels = [
     "not_planes"
 ]
 
-
 @app.route("/", methods=["GET"])
 def index():
     return jsonify({"message": "Aircraft recognition API is running."})
@@ -75,13 +74,6 @@ def predict():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-
-# ✅ New health check route (added only)
-@app.route("/health", methods=["GET"])
-def health():
-    return jsonify({"status": "OK"})
-
 
 if __name__ == "__main__":
     # Local run
